@@ -11,9 +11,8 @@ const { corsMiddleware } = require("./middleware/cors");
 const app = express();
 let httpServer = null;
 
-/** index.html na raiz do projeto; demais arquivos estaticos em frontend/ */
-const SITE_ROOT = path.join(__dirname, "..", "..");
-const FRONTEND_DIR = path.join(SITE_ROOT, "frontend");
+/** Pasta do site (index.html, css/, js/, api/, HTML/, admin/) — irma do diretorio backend/ */
+const FRONTEND_DIR = path.join(__dirname, "..", "..", "frontend");
 
 function logDatabaseEnvHint() {
   const raw = process.env.DATABASE_URL;
@@ -98,12 +97,7 @@ app.get("/api", (_req, res) => {
 
 app.use("/api", routes);
 
-function sendRootIndex(_req, res) {
-  res.sendFile(path.join(SITE_ROOT, "index.html"));
-}
-app.get("/", sendRootIndex);
-app.get("/index.html", sendRootIndex);
-app.use(express.static(FRONTEND_DIR, { index: false }));
+app.use(express.static(FRONTEND_DIR, { index: "index.html" }));
 
 async function startServer() {
   logDatabaseEnvHint();

@@ -1,14 +1,13 @@
 /**
- * Servidor estatico: arquivos em frontend/ nas rotas /; index.html na raiz do repo + proxy /api -> backend.
+ * Servidor estatico da pasta frontend/ + proxy /api -> backend (API_URL, padrao http://localhost:3000).
+ * Pastas: /api (cliente JS), /js (paginas), /css, /HTML, /admin, index.html
  */
-const path = require("path");
 const express = require("express");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5173;
-const SITE_ROOT = path.join(__dirname, "..");
-const FRONTEND_DIR = __dirname;
+const root = __dirname;
 const API_TARGET = process.env.API_URL || "http://localhost:3000";
 
 app.use(
@@ -19,12 +18,7 @@ app.use(
   })
 );
 
-function sendRootIndex(_req, res) {
-  res.sendFile(path.join(SITE_ROOT, "index.html"));
-}
-app.get("/", sendRootIndex);
-app.get("/index.html", sendRootIndex);
-app.use(express.static(FRONTEND_DIR, { index: false }));
+app.use(express.static(root));
 
 app.listen(PORT, () => {
   console.log(`Frontend estatico em http://localhost:${PORT}`);
